@@ -1,0 +1,71 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="520" height="150" viewBox="0 0 1040 300" role="img" aria-labelledby="title desc">
+  <title id="title">MediAyuCare</title>
+  <desc id="desc">MediAyuCare wide healthcare logo with medical cross, heart, ECG and stethoscope.</desc>
+
+  <defs>
+    <linearGradient id="teal" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0F9FA8"/>
+      <stop offset="1" stop-color="#18B99A"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Healthcare icon -->
+  <path d="M95 145 V92 A55 55 0 0 1 205 92 V145"
+        fill="none" stroke="url(#teal)" stroke-width="9" stroke-linecap="round"/>
+
+  <!-- Cross -->
+  <rect x="139" y="68" width="24" height="72" rx="5" fill="#12AFA1"/>
+  <rect x="115" y="92" width="72" height="24" rx="5" fill="#12AFA1"/>
+
+  <!-- People -->
+  <circle cx="112" cy="145" r="10" fill="#123F78"/>
+  <circle cx="188" cy="145" r="10" fill="#18AFA0"/>
+
+  <!-- Heart-like care shape -->
+  <path d="M150 214
+           C132 197 104 184 102 158
+           C101 143 119 138 132 150
+           C141 139 154 143 150 158
+           C146 143 159 139 168 150
+           C181 138 199 143 198 158
+           C196 184 168 197 150 214Z"
+        fill="url(#teal)"/>
+
+  <!-- White heart center -->
+  <path d="M150 202
+           C140 193 125 183 124 168
+           C124 159 135 156 141 164
+           C146 156 154 159 150 168
+           C146 159 154 156 159 164
+           C165 156 176 159 176 168
+           C175 183 160 193 150 202Z"
+        fill="#fff"/>
+
+  <!-- ECG -->
+  <path d="M118 161 H137 L143 150 L149 176 L156 143 L163 174 L169 158 H182"
+        fill="none" stroke="#123F78" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+
+  <!-- Stethoscope -->
+  <path d="M65 112 C50 112 42 122 42 137 V157 C42 178 53 188 68 188 C83 188 94 178 94 157 V137 C94 122 86 112 71 112"
+        fill="none" stroke="#123F78" stroke-width="7" stroke-linecap="round"/>
+  <circle cx="64" cy="112" r="6" fill="#123F78"/>
+  <circle cx="72" cy="112" r="6" fill="#123F78"/>
+
+  <path d="M68 188 C68 222 98 237 150 237 C202 237 232 222 232 188"
+        fill="none" stroke="#123F78" stroke-width="7" stroke-linecap="round"/>
+  <circle cx="241" cy="176" r="17" fill="#123F78"/>
+  <circle cx="241" cy="176" r="10" fill="#fff"/>
+  <circle cx="241" cy="176" r="6" fill="#18AFA0"/>
+
+  <!-- Wordmark -->
+  <text x="300" y="155" font-family="Arial, Helvetica, sans-serif" font-size="76"
+        font-weight="700" letter-spacing="-2">
+    <tspan fill="#123F78">Medi</tspan><tspan fill="#18AFA0">Ayu</tspan><tspan fill="#123F78">Care</tspan>
+  </text>
+
+  <!-- Tagline -->
+  <line x1="302" y1="185" x2="350" y2="185" stroke="#18AFA0" stroke-width="4" stroke-linecap="round"/>
+  <text x="372" y="193" font-family="Arial, Helvetica, sans-serif" font-size="27"
+        font-weight="600" letter-spacing="3" fill="#64748B">Your Health Ally</text>
+  <line x1="650" y1="185" x2="700" y2="185" stroke="#18AFA0" stroke-width="4" stroke-linecap="round"/>
+</svg>

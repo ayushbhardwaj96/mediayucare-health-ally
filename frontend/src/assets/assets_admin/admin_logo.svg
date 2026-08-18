@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg"
+     width="520" height="120" viewBox="0 0 1040 240"
+     role="img" aria-labelledby="title desc">
+  <title id="title">MediAyuCare Dashboard Panel</title>
+  <desc id="desc">Compact wide MediAyuCare dashboard logo.</desc>
+
+  <defs>
+    <linearGradient id="icon" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#4FD3E0"/>
+      <stop offset="100%" stop-color="#0C9DB0"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Compact medical icon -->
+  <rect x="70" y="48" width="116" height="116" rx="35" fill="url(#icon)"/>
+  <path d="M100 103
+           C100 82 116 68 128 68
+           C140 68 148 78 148 89
+           C148 78 156 68 168 68
+           C180 68 196 82 196 103
+           C196 126 176 143 148 162
+           C120 143 100 126 100 103Z"
+        fill="#EAFBFC"/>
+  <path d="M148 78 L148 126 M124 102 L172 102"
+        stroke="#123F78" stroke-width="10"
+        stroke-linecap="round"/>
+
+  <!-- Wordmark -->
+  <text x="220" y="112"
+        font-family="Arial, Helvetica, sans-serif"
+        font-size="78"
+        font-weight="700"
+        letter-spacing="-3">
+    <tspan fill="#123F78">Medi</tspan><tspan fill="#18AFA0">Ayu</tspan><tspan fill="#123F78">Care</tspan>
+  </text>
+
+  <!-- Dashboard Panel -->
+  <text x="224" y="159"
+        font-family="Arial, Helvetica, sans-serif"
+        font-size="34"
+        font-weight="600"
+        letter-spacing="0.5"
+        fill="#FFFFFF">Dashboard Panel</text>
+</svg>
