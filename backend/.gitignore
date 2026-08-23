@@ -1,0 +1,17 @@
+# Dependency directories (Never push this, it is too heavy)
+node_modules/
+
+# Secrets and environment variables (Never push this, contains database passwords)
+.env
+.env.local
+.env.production
+
+# Debug logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.eslintcache
+
+# Operating system files
+Thumbs.db
+.DS_Store
