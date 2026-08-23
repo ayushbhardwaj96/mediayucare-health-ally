@@ -54,4 +54,6 @@ const Banner = () => {
   )
 }
 
+// may benifit you
+
 export default Banner
