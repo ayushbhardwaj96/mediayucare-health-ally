@@ -6,15 +6,13 @@ import connectDB from "./config/mongodb.js";
 import express from "express";
 import cors from "cors";
 import connectCloudinary from "./config/cloudinary.js";
+import adminRouter from "./routes/adminRoute.js";
 
 const app = express();
 
-app.use(cors());
-app.use(express.json());
-
 dotenv.config({
     path: './.env'
-});
+}); 
 
 connectDB()
 .then(() => {
@@ -28,3 +26,18 @@ connectDB()
 });
 
 connectCloudinary() ;
+
+// middlewares
+
+app.use(cors());
+app.use(express.json());
+
+// api endpoints 
+app.use('/api/admin',adminRouter)
+// localhost:4000/api/admin/add-doctor
+
+ 
+
+
+
+ 
