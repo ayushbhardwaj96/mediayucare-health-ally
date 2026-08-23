@@ -54,6 +54,6 @@ const Banner = () => {
   )
 }
 
-// may benifit you
+// may benifit you na
 
 export default Banner
