@@ -106,8 +106,8 @@ const addDoctor = async (req, res) => {
     } catch (error) {
         console.error("Database save failed:", error.message);
 
-        // Catching Mongoose email collision constraints elegantly
-        if (error.code === 11000) {
+        // ✅ FIX: Enhanced check to catch duplicate key errors safely across different versions of Mongo/Mongoose
+        if (error.code === 11000 || (error.message && error.message.includes('duplicate key'))) {
             return res.status(409).json({ 
                 success: false, 
                 message: "A doctor with this email address already exists." 
@@ -148,7 +148,6 @@ const loginAdmin = async (req, res) => {
         // 3. Verify admin credentials
         if (email === process.env.ADMIN_EMAIL && password === process.env.ADMIN_PASSWORD) {
             
-            
             const token = jwt.sign(
                 { email: email, role: 'admin' }, 
                 process.env.JWT_SECRET,
@@ -158,7 +157,7 @@ const loginAdmin = async (req, res) => {
             return res.status(200).json({ success: true, token });
         } else {
             // Use 401 Unauthorized for bad credential submissions
-            return res.status(401).json({ success: false, message: "Invalid credentials" });
+            return res.status(401).json({ success: false, message: "Incorrect email or password. Please try again." });
         }  
 
     } catch (error) {
@@ -169,6 +168,5 @@ const loginAdmin = async (req, res) => {
         });
     }
 };
-
 
 export { addDoctor, loginAdmin };

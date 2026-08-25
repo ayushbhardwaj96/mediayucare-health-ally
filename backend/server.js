@@ -14,6 +14,15 @@ dotenv.config({
     path: './.env'
 }); 
 
+// middlewares
+
+app.use(cors());
+app.use(express.json());
+
+// api endpoints 
+app.use('/api/admin',adminRouter)
+// localhost:4000/api/admin/add-doctor
+
 connectDB()
 .then(() => {
     const port = process.env.PORT || 4000;
@@ -26,18 +35,5 @@ connectDB()
 });
 
 connectCloudinary() ;
-
-// middlewares
-
-app.use(cors());
-app.use(express.json());
-
-// api endpoints 
-app.use('/api/admin',adminRouter)
-// localhost:4000/api/admin/add-doctor
-
- 
-
-
 
  
