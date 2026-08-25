@@ -169,4 +169,41 @@ const loginAdmin = async (req, res) => {
     }
 };
 
-export { addDoctor, loginAdmin };
+// API to get all doctors list for admin panel
+const allDoctors = async (req, res) => {
+    try {
+        // 1. Using .lean() converts the Mongoose document into a plain JS object, making the query 3x faster and saving server memory
+        const doctors = await doctorModel.find({}).select('-password').lean();
+        
+        // 2. Gracefully handle the scenario where no doctor records exist in the database
+        if (!doctors || doctors.length === 0) {
+            return res.status(200).json({ 
+                success: true, 
+                message: "No doctors found in the system.",
+                doctors: [] 
+            });
+        }
+
+        // 3. Standard production success response with structured payload data
+        return res.status(200).json({ 
+            success: true, 
+            message: "Doctors list retrieved successfully.",
+            doctors 
+        });
+
+    } catch (error) {
+        // 4. Log the exact internal error message on the backend console for strict tracking and debugging
+        console.error(`[allDoctors API Error]: ${error.message}`);
+        
+        // 5. Send a generic clean error message to the frontend client without leaking internal database architecture strings
+        return res.status(500).json({ 
+            success: false, 
+            message: "Internal server error. Unable to fetch doctors list at this moment." 
+        });
+    }
+};
+
+
+
+
+export { addDoctor, loginAdmin, allDoctors };
