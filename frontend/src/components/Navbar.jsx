@@ -1,18 +1,25 @@
-import React, { useState } from 'react'
-import {assets} from '../assets/assets_frontend/assets'
+import React, { useState, useContext } from 'react'
+import { assets } from '../assets/assets_frontend/assets'
 import { NavLink, useNavigate } from 'react-router-dom'
+import { AppContext } from '../context/AppContext' // Import AppContext to access global state
 
 const Navbar = () => {
 
    const navigate = useNavigate();
+   const [showMenu, setShowMenu] = useState(false) 
 
-   const [showMenu,setShowMenu] = useState(false) 
-   const [token,setToken] = useState(true)
+   // ✅ FIXED: Pulling real authentication token state fields from your global context
+   const { token, setToken } = useContext(AppContext)
 
-
+   // ✅ FIXED: Added production logout sequence handler
+   const logout = () => {
+       localStorage.removeItem('token')
+       setToken(false)
+       navigate('/login')
+   }
 
   return (
-    <div className='flex item-center justify-between text-sm py-4 mb-5 border-b border-b-gray-400'>
+    <div className='flex items-center justify-between text-sm py-4 mb-5 border-b border-b-gray-400'>
       <img onClick={()=>navigate('/')} src={assets.logo} alt="MediAyuCare" className='w-[250px] h-auto cursor-pointer' />
 
       <ul className='hidden md:flex items-start gap-7 font-medium'>
@@ -43,14 +50,16 @@ const Navbar = () => {
             token
              ? 
              <div className='flex items-center gap-2 cursor-pointer group relative'>
-                <img className='w-8 rounded-full' src={assets.profile_pic} alt="" />
-                <img classname='w-2.5' src={assets.dropdown_icon} alt="" />
+                <img className='w-8 rounded-full' src={assets.profile_pic} alt="Profile" />
+                {/* ✅ FIXED: Corrected lowercase 'classname' typo to 'className' */}
+                <img className='w-2.5' src={assets.dropdown_icon} alt="Dropdown Indicator" />
 
                 <div className='absolute top-2 right-0 pt-14 text-base font-medium text-gray-600 z-20 hidden group-hover:block'>
-                    <div className='min-w-48 bg-stone-200 rounded flex flex-col gap-4 p-4'>
-                        <p onClick={()=>navigate('my-profile')} className='hover:text-black cursor-pointer'>My Profile</p>
-                        <p onClick={()=>navigate('my-appointments')} className='hover:text-black cursor-pointer'>My Appointments</p>
-                        <p onClick={()=>setToken(false)} className='hover:text-black cursor-pointer'>Logout</p>
+                    <div className='min-w-48 bg-stone-200 rounded flex flex-col gap-4 p-4 shadow-md'>
+                        <p onClick={()=>navigate('/my-profile')} className='hover:text-black cursor-pointer'>My Profile</p>
+                        <p onClick={()=>navigate('/my-appointments')} className='hover:text-black cursor-pointer'>My Appointments</p>
+                        {/* ✅ FIXED: Trigger user session logout workflow cleanly on click */}
+                        <p onClick={logout} className='hover:text-red-600 font-semibold cursor-pointer transition-colors'>Logout</p>
                     </div>
                 </div>
 
@@ -58,7 +67,7 @@ const Navbar = () => {
 
              <button
                onClick={() => navigate('/login')}
-               className='bg-primary text-white px-8 py-3 rounded-full font-light'
+               className='bg-primary text-white px-8 py-3 rounded-full font-light cursor-pointer hover:bg-opacity-95 transition-all duration-200'
              >
                Create account
              </button>
@@ -68,11 +77,10 @@ const Navbar = () => {
           onClick={()=>setShowMenu(true)}
           className='w-6 md:hidden cursor-pointer'
           src={assets.menu_icon}
-          alt=""
+          alt="Mobile Menu Open"
         />
 
         {/*--- for mobile--- screen----  */}
-
         <div
           className={`md:hidden ${
             showMenu
@@ -81,117 +89,53 @@ const Navbar = () => {
           } right-0 top-0 bottom-0 z-20 overflow-hidden bg-white transition-all duration-300 ease-in-out`}
         >
 
-          <div className='flex items-center justify-between px-5 py-5 border-b border-[#E6EEF0] bg-white'>
-
-            <img
-              src={assets.logo}
-              className='w-36 h-auto cursor-pointer'
-              alt=""
-            />
-
-            <div
-              className='w-10 h-10 flex items-center justify-center
-                         rounded-full bg-[#F0F8FA]
-                         active:scale-95 transition-all'
-            >
-
+          <div className='flex items-center justify-between px-5 py-5 border-b border-b-gray-200 bg-white'>
+            <img src={assets.logo} className='w-36 h-auto cursor-pointer' alt="Logo" />
+            
+            <div className='w-10 h-10 flex items-center justify-center rounded-full bg-[#F0F8FA] active:scale-95 transition-all'>
               <img
                 onClick={() => setShowMenu(false)}
                 src={assets.cross_icon}
                 className='w-5 cursor-pointer'
-                alt=""
+                alt="Mobile Menu Close"
               />
-
             </div>
-
           </div>
 
-
           <ul className='flex flex-col gap-2 mt-6 px-5 text-base font-medium'>
-
-            <NavLink
-              onClick={() => setShowMenu(false)}
-              to='/'
-              className='w-full'
-            >
-              <p className='px-5 py-4 rounded-xl inline-block w-full
-                            text-[#334155]
-                            bg-[#F7FBFC]
-                            hover:bg-[#E8F7F9]
-                            hover:text-[#087F8C]
-                            active:bg-[#E8F7F9]
-                            transition-all duration-200'>
+            <NavLink onClick={() => setShowMenu(false)} to='/' className='w-full'>
+              <p className='px-5 py-4 rounded-xl inline-block w-full text-[#334155] bg-[#F7FBFC] hover:bg-[#E8F7F9] hover:text-[#087F8C] active:bg-[#E8F7F9] transition-all duration-200'>
                 HOME
               </p>
             </NavLink>
 
-
-            <NavLink
-              onClick={() => setShowMenu(false)}
-              to='/doctors'
-              className='w-full'
-            >
-              <p className='px-5 py-4 rounded-xl inline-block w-full
-                            text-[#334155]
-                            bg-[#F7FBFC]
-                            hover:bg-[#E8F7F9]
-                            hover:text-[#087F8C]
-                            active:bg-[#E8F7F9]
-                            transition-all duration-200'>
+            <NavLink onClick={() => setShowMenu(false)} to='/doctors' className='w-full'>
+              <p className='px-5 py-4 rounded-xl inline-block w-full text-[#334155] bg-[#F7FBFC] hover:bg-[#E8F7F9] hover:text-[#087F8C] active:bg-[#E8F7F9] transition-all duration-200'>
                 ALL DOCTORS
               </p>
             </NavLink>
 
-
-            <NavLink
-              onClick={() => setShowMenu(false)}
-              to='/about'
-              className='w-full'
-            >
-              <p className='px-5 py-4 rounded-xl inline-block w-full
-                            text-[#334155]
-                            bg-[#F7FBFC]
-                            hover:bg-[#E8F7F9]
-                            hover:text-[#087F8C]
-                            active:bg-[#E8F7F9]
-                            transition-all duration-200'>
+            <NavLink onClick={() => setShowMenu(false)} to='/about' className='w-full'>
+              <p className='px-5 py-4 rounded-xl inline-block w-full text-[#334155] bg-[#F7FBFC] hover:bg-[#E8F7F9] hover:text-[#087F8C] active:bg-[#E8F7F9] transition-all duration-200'>
                 ABOUT
               </p>
             </NavLink>
 
-
-            <NavLink
-              onClick={() => setShowMenu(false)}
-              to='/contact'
-              className='w-full'
-            >
-              <p className='px-5 py-4 rounded-xl inline-block w-full
-                            text-[#334155]
-                            bg-[#F7FBFC]
-                            hover:bg-[#E8F7F9]
-                            hover:text-[#087F8C]
-                            active:bg-[#E8F7F9]
-                            transition-all duration-200'>
+            <NavLink onClick={() => setShowMenu(false)} to='/contact' className='w-full'>
+              <p className='px-5 py-4 rounded-xl inline-block w-full text-[#334155] bg-[#F7FBFC] hover:bg-[#E8F7F9] hover:text-[#087F8C] active:bg-[#E8F7F9] transition-all duration-200'>
                 CONTACT
               </p>
             </NavLink>
-
           </ul>
 
-
           {/* Mobile Menu Footer */}
-
-          <div className='absolute bottom-0 left-0 right-0 px-6 py-6
-                          border-t border-[#E6EEF0]
-                          bg-[#F8FCFD]'>
-
+          <div className='absolute bottom-0 left-0 right-0 px-6 py-6 border-t border-[#E6EEF0] bg-[#F8FCFD]'>
             <p className='text-center text-xs text-[#94A3B8] leading-5'>
               Your healthcare journey, simplified with{' '}
               <span className='font-semibold text-[#087F8C]'>
                 MediAyuCare
               </span>
             </p>
-
           </div>
 
         </div>
