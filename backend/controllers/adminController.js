@@ -4,6 +4,8 @@ import bcrypt from "bcrypt";
 import { v2 as cloudinary } from "cloudinary";
 import fs from "fs"; // Required for cleaning up temporary files
 import doctorModel from "../models/doctorModel.js"; 
+import appointmentModel from "../models/appointmentModel.js";
+import userModel from "../models/userModel.js";
 
 // API for adding Doctor
 const addDoctor = async (req, res) => {
@@ -106,7 +108,7 @@ const addDoctor = async (req, res) => {
     } catch (error) {
         console.error("Database save failed:", error.message);
 
-        // ✅ FIX: Enhanced check to catch duplicate key errors safely across different versions of Mongo/Mongoose
+        //   Enhanced check to catch duplicate key errors safely across different versions of Mongo/Mongoose
         if (error.code === 11000 || (error.message && error.message.includes('duplicate key'))) {
             return res.status(409).json({ 
                 success: false, 
@@ -203,7 +205,99 @@ const allDoctors = async (req, res) => {
     }
 };
 
+// Fetch all system appointments sorted by newest first
+const appointmentsAdmin = async (req, res) => {
+    try {
+        // Find all records and sort them so newest bookings appear at the top
+        const appointments = await appointmentModel.find({}).sort({ createdAt: -1 });
+        
+        return res.status(200).json({ 
+            success: true, 
+            appointments 
+        });
+
+    } catch (error) {
+        // Log the detailed error string securely on the backend terminal
+        console.error("Admin Appointments Fetch Exception:", error);
+        
+        return res.status(500).json({ 
+            success: false, 
+            message: "Failed to retrieve appointments due to a server error." 
+        });
+    }
+};
+
+// API for cancel the appointments from admin
+const appointmentCancel = async (req, res) => {
+    try {
+        const { appointmentId } = req.body;
+
+        // Fetch the active appointment record to read the schedule information
+        const appointmentData = await appointmentModel.findById(appointmentId).lean();
+
+        if (!appointmentData) {
+            return res.status(404).json({ success: false, message: "Appointment record not found." });
+        }
+
+        // Prevent processing if the appointment has already been cancelled
+        if (appointmentData.cancelled) {
+            return res.status(400).json({ success: false, message: "This appointment is already cancelled." });
+        }
+
+        // Mark the appointment as cancelled in the database
+        await appointmentModel.findByIdAndUpdate(appointmentId, { cancelled: true });
+
+        // Extract scheduling metadata parameters safely
+        const { docId, slotDate, slotTime } = appointmentData;
+        const slotQueryKey = `slots_booked.${slotDate}`;
+
+        // Release the booked time slot from the doctor's schedule array instantly
+        await doctorModel.findByIdAndUpdate(docId, {
+            $pull: { [slotQueryKey]: slotTime }
+        });
+
+        return res.status(200).json({ success: true, message: "Appointment cancelled successfully." });
+
+    } catch (error) {
+        console.error(`[cancelAppointment Admin API Error]: ${error.message}`);
+        return res.status(500).json({ success: false, message: "Internal server error. Failed to cancel appointment." });
+    }
+};
+
+const adminDashboard = async (req, res) => {
+    try {
+        // Fetch summary counts and latest records concurrently to optimize execution speed
+        const [doctorCount, patientCount, totalAppointments, latestAppointments] = await Promise.all([
+            doctorModel.countDocuments({}),
+            userModel.countDocuments({}),
+            appointmentModel.countDocuments({}),
+            appointmentModel.find({})
+                .select('-__v')
+                .sort({ createdAt: -1 }) // Sort by newest records directly on the database server
+                .limit(5)
+                .lean()
+        ]);
+
+        const dashData = {
+            doctors: doctorCount,
+            appointments: totalAppointments,
+            patients: patientCount,
+            latestAppointments: latestAppointments || []
+        };
+
+        return res.status(200).json({ 
+            success: true, 
+            dashData 
+        });
+
+    } catch (error) {
+        console.error(`[adminDashboard API Error]: ${error.message}`);
+        return res.status(500).json({ 
+            success: false, 
+            message: "Internal server error. Failed to compile dashboard metrics." 
+        });
+    }
+};
 
 
-
-export { addDoctor, loginAdmin, allDoctors };
+export { addDoctor, loginAdmin, allDoctors, appointmentsAdmin, appointmentCancel,adminDashboard };
