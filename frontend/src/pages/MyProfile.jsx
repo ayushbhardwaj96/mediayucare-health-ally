@@ -1,25 +1,77 @@
-import React, { useState } from 'react'
+import React, { useState, useContext } from 'react'
+import { AppContext } from '../context/AppContext'
 import { assets } from '../assets/assets_frontend/assets'
+import axios from "axios";
+import { toast } from "react-toastify";
+ 
 
 const MyProfile = () => {
 
-  const [userData, setUserData] = useState({
-    name: "Erling Haland",
-    image: assets.profile_pic,
-    email: 'halandErling@gmail.com',
-    phone: '+1 123 456 7890',
-    address: {
-      line1: "56th Mark, Surdengon ",
-      line2: "Circle, Church Road, Norway"
-    },
-    gender: "Male",
-    dob: "2000-01-20"
-  })
+  const {userData, setUserData, token , backendUrl, loadUserProfileData} = useContext(AppContext)
 
   const [isEdit, setIsEdit] = useState(false)
+
   
-  // 🔴 FIX 1: Defined missing image state variables
+  //  Defined missing image state variables
   const [image, setImage] = useState(false) 
+
+        // Update user profile information via API
+    const updateUserProfileData = async () => {
+        if (!userData) {
+            return toast.error("No active profile data found to update.");
+        }
+
+    const phoneRegex = /^[0-9]{10}$/;
+    const sanitizedPhone = (userData.phone || '').trim();
+
+    if (!phoneRegex.test(sanitizedPhone)) {
+        return toast.error("Please enter a valid 10-digit phone number.");
+    }
+
+        try {
+            const formData = new FormData();
+
+            // Clear accidental spaces from the input strings
+            formData.append('name', (userData.name || '').trim());
+            formData.append('phone', (userData.phone || '').trim());
+            formData.append('gender', userData.gender || 'Not Selected');
+            formData.append('dob', userData.dob || '');
+
+            // Use a fallback object if the address does not exist in the database
+            const addressPayload = userData.address || { line1: '', line2: '' };
+            formData.append('address', JSON.stringify(addressPayload));
+
+            if (image) {
+                formData.append('image', image);
+            }
+
+            const { data } = await axios.post(`${backendUrl}/api/user/update-profile`, formData, { 
+                headers: { token } 
+            });
+
+            if (data.success) {
+                toast.success(data.message || "Profile updated successfully.");
+                await loadUserProfileData(); // Reload fresh data from database
+                setIsEdit(false);
+                setImage(false);
+            } else {
+                toast.error(data.message || "Update rejected by server configuration rules.");
+            }
+
+        } catch (error) {
+            console.error("Profile update error:", error);
+
+            // Extract error message directly from backend response
+            if (error.response?.data?.message) {
+                toast.error(error.response.data.message);
+            } else if (error.message) {
+                toast.error(`Network Error: ${error.message}`);
+            } else {
+                toast.error("An unhandled connection error occurred. Please try again.");
+            }
+        }
+    };
+
 
   return userData ? (
         <div className='max-w-lg flex flex-col gap-2 text-sm pt-5'>
@@ -30,7 +82,7 @@ const MyProfile = () => {
                         <img className='w-36 rounded opacity-75' src={image ? URL.createObjectURL(image) : userData.image} alt="" />
                         <img className='w-10 absolute bottom-12 right-12' src={image ? '' : assets.upload_icon} alt="" />
                     </div>
-                    {/* 🔴 FIX 2: Extracted files[0] properly instead of passing the entire file list */}
+                    {/*  FIX 2: Extracted files[0] properly instead of passing the entire file list */}
                     <input onChange={(e) => setImage(e.target.files[0])} type="file" id="image" hidden />
                 </label>
                 : <img className='w-36 rounded' src={userData.image} alt="" />
@@ -95,7 +147,7 @@ const MyProfile = () => {
             <div className='mt-10'>
 
                 {isEdit
-                    ? <button onClick={()=>setIsEdit(false)} className='border border-primary px-8 py-2 rounded-full hover:bg-primary hover:text-white transition-all'>Save information</button>
+                    ? <button onClick={updateUserProfileData} className='border border-primary px-8 py-2 rounded-full hover:bg-primary hover:text-white transition-all'>Save information</button>
                     : <button onClick={() => setIsEdit(true)} className='border border-primary px-8 py-2 rounded-full hover:bg-primary hover:text-white transition-all'>Edit</button>
                 }
 

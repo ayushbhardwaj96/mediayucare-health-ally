@@ -14,6 +14,8 @@ const currencySymbol = '$'
  const [doctors, setDoctors] = useState([])
 const [token, setToken] = useState(localStorage.getItem('token') ? localStorage.getItem('token') : '');
 
+    const [userData, setUserData] = useState(false)
+
  
 
      // Fetch all public doctor profiles for the client facing portal
@@ -40,9 +42,45 @@ const [token, setToken] = useState(localStorage.getItem('token') ? localStorage.
         }
     };
 
+
+        // Fetch and load the logged-in user's profile details
+    const loadUserProfileData = async () => {
+        try {
+            const { data } = await axios.get(`${backendUrl}/api/user/get-profile`, { 
+                headers: { token } 
+            });
+
+            if (data.success) {
+                setUserData(data.userData);
+            } else {
+                toast.error(data.message);
+            }
+        } catch (error) {
+            console.error("Profile load failed:", error);
+
+            // Get error message directly from backend response
+            if (error.response && error.response.data && error.response.data.message) {
+                toast.error(error.response.data.message);
+            } else {
+                toast.error("Failed to load profile. Check your connection.");
+            }
+        }
+    };
+
+
+
+
         useEffect(() => {
        getDoctorsData();
     }, [])
+
+    useEffect(() => {
+        if (token) {
+            loadUserProfileData()
+        } else {
+            setUserData(false)
+        }
+    }, [token])
 
 
 
@@ -51,7 +89,10 @@ const [token, setToken] = useState(localStorage.getItem('token') ? localStorage.
      currencySymbol,
       getDoctorsData,
       token, setToken,
-      backendUrl
+      backendUrl,
+      userData,
+      setUserData,
+      loadUserProfileData
 }
 
 
