@@ -42,14 +42,7 @@ const TopDoctors = () => {
 
             <div className='p-4'>
 
-              <div className='inline-flex items-center gap-2 text-xs font-medium
-              text-[#16A36A] bg-[#EAF8F1] px-2.5 py-1 rounded-full mb-2'>
-
-                <p className='w-1.5 h-1.5 bg-[#16A36A] rounded-full'></p>
-
-                <p>Available</p>
-
-              </div>
+               <p className={`w-2 h-2 rounded-full ${item.available ? 'bg-green-500' : "bg-gray-500"}`}></p><p>{item.available ? 'Available' : "Not Available"}</p>
 
               <p className='text-[#123F78] text-lg font-semibold mt-1'>
                 {item.name}

@@ -174,16 +174,26 @@ const Doctors = () => {
                 {/* Doctor Details */}  
                 <div className='p-4 sm:p-5'>  
   
-                  <div className='inline-flex items-center gap-2 
-                  text-[11px] sm:text-xs font-semibold text-[#159A63] 
-                  bg-[#EAF8F1] border border-[#D4F0E1]
-                  px-2.5 py-1.5 rounded-full mb-3'>  
-  
-                    <p className='w-1.5 h-1.5 bg-[#16A36A] rounded-full'></p>  
-  
-                    <p>Available</p>  
-  
-                  </div>  
+                 <div 
+  className={`inline-flex items-center gap-2 text-[11px] sm:text-xs font-semibold px-2.5 py-1.5 rounded-full mb-3 border transition-all duration-300 ${
+    item.available 
+      ? 'text-[#159A63] bg-[#EAF8F1] border-[#D4F0E1]' 
+      : 'text-[#64748B] bg-[#F8FAFC] border-[#E2E8F0]'
+  }`}
+>  
+  {/* Dynamic Status Indicator Dot */}
+  <span 
+    className={`w-1.5 h-1.5 rounded-full flex-shrink-0 transition-colors duration-300 ${
+      item.available ? 'bg-[#16A36A]' : 'bg-[#94A3B8]'
+    }`}
+  />  
+
+  {/* Dynamic Status Text */}
+  <p className='tracking-wide font-semibold'>
+    {item.available ? 'Available' : 'Not Available'}
+  </p>  
+</div>
+
   
                   <p className='text-[#123F78] text-base sm:text-lg font-semibold 
                   leading-6 truncate'>  

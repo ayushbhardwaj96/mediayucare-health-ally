@@ -3,6 +3,7 @@ import doctorModel from "../models/doctorModel.js";
 import appointmentModel from "../models/appointmentModel.js";
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
+import mongoose from "mongoose";
 
 const loginDoctor = async (req, res) => {
     try {
@@ -169,11 +170,257 @@ const appointmentsDoctor = async (req, res) => {
 };
 
 
+// Marks a scheduled appointment as successfully completed by the assigned doctor
+const appointmentComplete = async (req, res) => {
+    try {
+        const { docId, appointmentId } = req.body;
 
- 
+        if (!appointmentId || !docId) {
+            return res.status(400).json({ success: false, message: "Appointment ID and Doctor ID are required parameters." });
+        }
+
+        const appointmentData = await appointmentModel.findById(appointmentId).lean();
+
+        if (!appointmentData) {
+            return res.status(404).json({ success: false, message: "Target appointment record not found." });
+        }
+
+        // Cross-verify session data to prevent cross-account modification attempts
+        if (appointmentData.docId.toString() !== docId.toString()) {
+            return res.status(403).json({ success: false, message: "Unauthorized action. This appointment is assigned to a different doctor." });
+        }
+
+        if (appointmentData.cancelled) {
+            return res.status(400).json({ success: false, message: "Cannot complete an appointment that has already been cancelled." });
+        }
+
+        if (appointmentData.isCompleted) {
+            return res.status(400).json({ success: false, message: "This appointment has already been marked as completed." });
+        }
+
+        // Update the completion flag atomically in the database
+        await appointmentModel.findByIdAndUpdate(appointmentId, { isCompleted: true });
+
+        return res.status(200).json({ success: true, message: "Appointment marked as completed successfully." });
+
+    } catch (error) {
+        console.error(`[appointmentComplete API Exception]: ${error.message}`);
+        return res.status(500).json({ success: false, message: "Internal server error. Failed to complete appointment." });
+    }
+};
+
+
+// API to cancel an appointment directly from the doctor dashboard panel
+const appointmentCancel = async (req, res) => {
+    try {
+        const { docId, appointmentId } = req.body;
+
+        if (!appointmentId || !docId) {
+            return res.status(400).json({ success: false, message: "Appointment ID and Doctor ID are required parameters." });
+        }
+
+        const appointmentData = await appointmentModel.findById(appointmentId).lean();
+
+        if (!appointmentData) {
+            return res.status(404).json({ success: false, message: "Target appointment record not found." });
+        }
+
+        // Cross-verify doctor ownership to prevent cross-account modifications
+        if (appointmentData.docId.toString() !== docId.toString()) {
+            return res.status(403).json({ success: false, message: "Unauthorized action. This appointment is assigned to a different doctor." });
+        }
+
+        if (appointmentData.cancelled) {
+            return res.status(400).json({ success: false, message: "This appointment has already been cancelled." });
+        }
+
+        if (appointmentData.isCompleted) {
+            return res.status(400).json({ success: false, message: "Cannot cancel an appointment that has already been completed." });
+        }
+
+        // Atomically flag the appointment status as cancelled in the database
+        await appointmentModel.findByIdAndUpdate(appointmentId, { cancelled: true });
+
+        const { slotDate, slotTime } = appointmentData;
+        const slotQueryKey = `slots_booked.${slotDate}`;
+
+        // Instantly release the time slot from the doctor's calendar schedule for other patients
+        await doctorModel.findByIdAndUpdate(docId, {
+            $pull: { [slotQueryKey]: slotTime }
+        });
+
+        return res.status(200).json({ success: true, message: "Appointment cancelled successfully." });
+
+    } catch (error) {
+        console.error(`[appointmentCancel Doctor API Error]: ${error.message}`);
+        return res.status(500).json({ success: false, message: "Internal server error. Failed to cancel appointment." });
+    }
+};
+
+
+//  API to get dashboard data in doctor pannel
+
+// API to get dashboard data for doctor panel
+const doctorDashboard = async (req, res) => {
+    try {
+        const { docId } = req.body;
+
+        if (!docId) {
+            return res.status(400).json({ success: false, message: "Doctor ID parameter is required." });
+        }
+
+        // Convert the string safely to an authentic ObjectId for matching
+        const doctorObjectId = new mongoose.Types.ObjectId(docId);
+
+        const [analytics, latestAppointments] = await Promise.all([
+            appointmentModel.aggregate([
+                { 
+                    // FIXED: Check both the true ObjectId AND the raw String representation to handle schema mismatches
+                    $match: { 
+                        $or: [
+                            { docId: doctorObjectId },
+                            { docId: docId }
+                        ]
+                    } 
+                },
+                {
+                    $group: {
+                        _id: null,
+                        totalAppointments: { $sum: 1 },
+                        earnings: {
+                            $sum: {
+                                $cond: [
+                                    { $or: [
+                                        { $eq: ["$isCompleted", true] },
+                                        { $eq: ["$completed", true] },
+                                        { $eq: ["$payment", true] }
+                                    ]},
+                                    "$amount",
+                                    0
+                                ]
+                            }
+                        },
+                        uniquePatients: { $addToSet: "$userId" }
+                    }
+                }
+            ]),
+            appointmentModel.find({ docId })
+                .select('-__v')
+                .sort({ createdAt: -1 })
+                .limit(5)
+                .lean()
+        ]);
+
+        // Access the first index item if the data array contains aggregated stats
+        const stats = analytics[0] || { totalAppointments: 0, earnings: 0, uniquePatients: [] };
+
+        const dashData = {
+            earnings: stats.earnings || 0,
+            appointments: stats.totalAppointments || 0,
+            patients: stats.uniquePatients ? stats.uniquePatients.length : 0,
+            latestAppointments: latestAppointments || []
+        };
+
+        return res.status(200).json({ success: true, dashData });
+
+    } catch (error) {
+        console.error(`[doctorDashboard API Error]: ${error.message}`);
+        return res.status(500).json({ success: false, message: "Internal server error. Failed to compile dashboard metrics." });
+    }
+};
+
+// get doctor profile in doctor panel
+const doctorProfile = async (req, res) => {
+    try {
+        const { docId } = req.body;
+
+        // Ensure the doctor ID parameter is provided before touching the database
+        if (!docId) {
+            return res.status(400).json({ 
+                success: false, 
+                message: "Doctor ID parameter is required." 
+            });
+        }
+
+        // Fetch profile data without sensitive credentials and parse as a fast plain JS object
+        const profileData = await doctorModel.findById(docId)
+            .select('-password -__v')
+            .lean();
+
+        if (!profileData) {
+            return res.status(404).json({ 
+                success: false, 
+                message: "Doctor profile record not found." 
+            });
+        }
+
+        return res.status(200).json({ 
+            success: true, 
+            profileData 
+        });
+
+    } catch (error) {
+        console.error(`[doctorProfile API Error]: ${error.message}`);
+        return res.status(500).json({ 
+            success: false, 
+            message: "Internal server error. Failed to retrieve profile data." 
+        });
+    }
+};
+
+
+// API to update doctor profile data from Doctor Panel
+const updateDoctorProfile = async (req, res) => {
+    try {
+        const { docId, fee, address, available } = req.body;
+
+        // Fail-fast structural validation
+        if (!docId) {
+            return res.status(400).json({ success: false, message: "Doctor ID is a required parameter." });
+        }
+
+        // Basic verification to protect database schema constraints
+        if (fee !== undefined && (isNaN(fee) || fee < 0)) {
+            return res.status(400).json({ success: false, message: "Please provide a valid numeric fee amount." });
+        }
+
+        // Build a dynamic, safe update object payload
+        const updateData = {};
+        
+        if (fee !== undefined) updateData.fee = Number(fee);
+        if (available !== undefined) updateData.available = Boolean(available);
+        
+        // Secure nested object handling for line addresses
+        if (address) {
+            updateData.address = {
+                line1: address.line1?.trim() || "",
+                line2: address.line2?.trim() || ""
+            };
+        }
+
+        // Perform atomic database record modification
+        const updatedDoctor = await doctorModel.findByIdAndUpdate(
+            docId, 
+            { $set: updateData }, 
+            { new: true, runValidators: true } // Runs schema rule checks before writing changes
+        );
+
+        if (!updatedDoctor) {
+            return res.status(404).json({ success: false, message: "Doctor profile record not found." });
+        }
+
+        return res.status(200).json({ success: true, message: "Profile parameters updated successfully." });
+
+    } catch (error) {
+        console.error(`[updateDoctorProfile API Error]: ${error.message}`);
+        return res.status(500).json({ success: false, message: "Internal server error. Failed to modify profile data." });
+    }
+};
+
+
 
 export { 
 
     doctorList,
-    changeAvailability , loginDoctor , appointmentsDoctor
+    changeAvailability , loginDoctor , appointmentsDoctor, appointmentComplete, appointmentCancel, doctorDashboard, doctorProfile, updateDoctorProfile
 };

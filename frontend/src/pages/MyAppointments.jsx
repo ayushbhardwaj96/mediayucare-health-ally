@@ -247,7 +247,7 @@ const slotDateFormat = (slotDate) => {
             justify-end'>
 
            {/* 1. Paid Badge (Shows only when appointment is active AND paid) */}
-{!item.cancelled && item.payment && (
+{!item.cancelled && item.payment && !item.isCompleted && (
   <button 
     className='w-full lg:min-w-48
     text-[#16A34A] bg-[#F0FDF4]
@@ -263,7 +263,7 @@ const slotDateFormat = (slotDate) => {
 )}
 
 {/* 2. Pay Online Button (Shows only when appointment is active AND NOT paid) */}
-{!item.cancelled && !item.payment && (
+{!item.cancelled && !item.payment && !item.isCompleted && (
   <button 
     onClick={() => appointmentRazorpay(item._id)}
     className='w-full lg:min-w-48
@@ -282,7 +282,7 @@ const slotDateFormat = (slotDate) => {
 )}
 
            
-{!item.cancelled && (
+{!item.cancelled && !item.payment && !item.isCompleted && (
   <button
     onClick={() => cancelAppointment(item._id)}
     className='w-full lg:min-w-48
@@ -300,7 +300,7 @@ const slotDateFormat = (slotDate) => {
   </button>
 )}  
 
-{item.cancelled && (
+{item.cancelled && !item.isCompleted && (
   <button 
     disabled
     className='w-full lg:min-w-48
@@ -311,6 +311,20 @@ const slotDateFormat = (slotDate) => {
     text-center'
   >
     Appointment cancelled
+  </button>
+)}
+
+{ item.isCompleted && (
+  <button 
+    
+    className='w-full lg:min-w-48
+   text-[#16A34A] bg-[#F0FDF4]
+    py-2.5 px-5
+   border border-[#BBF7D0]
+    rounded-lg font-medium text-sm
+    text-center'
+  >
+    Completed
   </button>
 )}
 

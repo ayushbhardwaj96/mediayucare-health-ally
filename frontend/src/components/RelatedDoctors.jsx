@@ -112,30 +112,35 @@ const RelatedDoctors = ({ speciality, docId }) => {
 
               {/* Availability Badge */}
 
-              <div className='inline-flex items-center gap-2
-                              text-xs font-semibold
-                              text-[#159A63]
-                              bg-[#EAF8F1]
-                              border border-[#D4F0E1]
-                              px-3 py-1.5
-                              rounded-full mb-3'>
+              <div 
+  className={`inline-flex items-center gap-2 text-xs font-semibold px-3 py-1.5 rounded-full mb-3 border transition-all duration-300 ${
+    item.available 
+      ? 'text-[#159A63] bg-[#EAF8F1] border-[#D4F0E1]' 
+      : 'text-[#64748B] bg-[#F8FAFC] border-[#E2E8F0]'
+  }`}
+>
+  {/* Status Dot with Conditional Animation Group */}
+  <span className='relative flex h-2 w-2 flex-shrink-0'>
+    
+    {/* Only animate the ping glow ring if the doctor is active and available */}
+    {item.available && (
+      <span className='absolute inline-flex h-full w-full rounded-full bg-[#16A36A] opacity-40 animate-pulse group-hover:animate-ping duration-1000' />
+    )}
+    
+    {/* Core Solid Center Indicator Dot */}
+    <span 
+      className={`relative inline-flex h-2 w-2 rounded-full transition-colors duration-300 ${
+        item.available ? 'bg-[#16A36A]' : 'bg-[#94A3B8]'
+      }`}
+    />
+    
+  </span>
 
-                <span className='relative flex h-2 w-2'>
-
-                  <span className='absolute inline-flex h-full w-full
-                                   rounded-full bg-[#16A36A] opacity-40
-                                   group-hover:animate-ping'>
-                  </span>
-
-                  <span className='relative inline-flex h-2 w-2
-                                   rounded-full bg-[#16A36A]'>
-                  </span>
-
-                </span>
-
-                <p>Available for appointment</p>
-
-              </div>
+  {/* Dynamic Descriptive Text String */}
+  <p className='tracking-wide'>
+    {item.available ? 'Available for appointment' : 'Not Available for Bookings'}
+  </p>
+</div>
 
 
               {/* Doctor Name */}
