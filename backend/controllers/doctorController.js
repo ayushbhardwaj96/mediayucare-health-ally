@@ -1,5 +1,62 @@
 
 import doctorModel from "../models/doctorModel.js"; 
+import appointmentModel from "../models/appointmentModel.js";
+import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
+
+const loginDoctor = async (req, res) => {
+    try {
+        const { email, password } = req.body;
+
+        if (!email || !password) {
+            return res.status(400).json({ 
+                success: false, 
+                message: "Email and password parameters are required." 
+            });
+        }
+
+        // Clean user input and check if the doctor exists in the database
+        const doctor = await doctorModel.findOne({ email: email.toLowerCase().trim() });
+
+        // Generic error response to prevent account enumeration attacks
+        if (!doctor) {
+            return res.status(401).json({ success: false, message: "Invalid email or password credentials." }) ;
+        }
+
+        const isMatch = await bcrypt.compare(password, doctor.password) ;
+
+        if (!isMatch) {
+            return res.status(401).json({ success: false, message: "Invalid email or password credentials." });
+        }
+
+        // Generate a secure token with explicit role scope tracking
+        const token = jwt.sign(
+            { 
+                id: doctor._id, 
+                role: 'doctor', 
+                email: doctor.email 
+            }, 
+            process.env.JWT_SECRET,
+            { expiresIn: '7d' }
+        );
+
+        doctor.password = undefined;
+
+        return res.status(200).json({ 
+            success: true, 
+            token,
+            message: "Authentication successful. Welcome to your dashboard."
+        });
+
+    } catch (error) {
+        console.error(`[loginDoctor API Exception]: ${error.message}`);
+        return res.status(500).json({ 
+            success: false, 
+            message: "Internal server error occurred during authentication processing." 
+        });
+    }
+};
+
 
 
 /**
@@ -88,11 +145,35 @@ const doctorList = async (req, res) => {
     }
 };
 
-export { doctorList };
+// Fetch all scheduled appointments assigned to a specific doctor
+const appointmentsDoctor = async (req, res) => {
+    try {
+        const { docId } = req.body;
+
+        if (!docId) {
+            return res.status(400).json({ success: false, message: "Doctor ID is required." });
+        }
+
+        // Retrieve appointments for the doctor and sort them from newest to oldest
+        const appointments = await appointmentModel.find({ docId })
+            .select('-__v')
+            .sort({ createdAt: -1 })
+            .lean();
+
+        return res.status(200).json({ success: true, appointments });
+
+    } catch (error) {
+        console.error(`[appointmentsDoctor API Error]: ${error.message}`);
+        return res.status(500).json({ success: false, message: "Internal server error. Failed to retrieve appointments." });
+    }
+};
 
 
+
+ 
 
 export { 
-   
-    changeAvailability  
+
+    doctorList,
+    changeAvailability , loginDoctor , appointmentsDoctor
 };
