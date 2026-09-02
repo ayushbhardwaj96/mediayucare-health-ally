@@ -28,7 +28,7 @@ A production-style **full-stack healthcare appointment platform** that connects 
 ## 🎨 Project Overview
 
 <p align="center">
-  <img src="assets/mediayucare-3d-overview.png" alt="MediAyuCare 3D Project Overview" width="100%">
+  <img src="frontend/src/assets/assets_frontend/mediayucare-3d-overview.png" alt="MediAyuCare 3D Project Overview" width="100%">
 </p>
 
 > **MediAyuCare** was created around a simple real-world problem: making healthcare appointment booking more organized and convenient for patients while giving doctors and administrators the tools needed to manage appointments efficiently.
