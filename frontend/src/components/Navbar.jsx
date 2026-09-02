@@ -124,7 +124,7 @@ const Navbar = () => {
             </NavLink>
           </ul>
 
-          {/* Mobile Menu Footer */}
+          {/* Mobile Menu Footer
           <div className='absolute bottom-0 left-0 right-0 px-6 py-6 border-t border-[#E6EEF0] bg-[#F8FCFD]'>
             <p className='text-center text-xs text-[#94A3B8] leading-5'>
               Your healthcare journey, simplified with{' '}
@@ -132,7 +132,7 @@ const Navbar = () => {
                 MediAyuCare
               </span>
             </p>
-          </div>
+          </div> */}
 
         </div>
 
