@@ -21,12 +21,21 @@ dotenv.config({
 app.use(cors());
 app.use(express.json());
 
-// api endpoints 
-app.use('/api/admin',adminRouter)
-// localhost:4000/api/admin/add-doctor
-app.use('/api/doctor', doctorRouter)
+// API health/status endpoint
+app.get("/", (req, res) => {
+    res.status(200).json({
+        success: true,
+        message: "MediAyuCare API is running",
+        status: "healthy"
+    });
+});
 
-app.use('/api/user', userRouter)
+// API endpoints
+app.use('/api/admin', adminRouter);
+// localhost:4000/api/admin/add-doctor
+app.use('/api/doctor', doctorRouter);
+
+app.use('/api/user', userRouter);
 
 connectDB()
 .then(() => {
