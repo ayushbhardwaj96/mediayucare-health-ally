@@ -1,241 +1,415 @@
+<div align="center">
+
 # 🏥 MediAyuCare
 
-> A full-stack healthcare appointment platform connecting patients,
-> doctors, and administrators through secure appointment booking,
-> payments, and role-based dashboards.
+### **Your Health Ally**
 
-[![Live Patient
-Website](https://img.shields.io/badge/Patient%20Website-Live-087F8C?style=for-the-badge)](https://mediayucare-health-ally.vercel.app)
-[![Admin & Doctor
-Panel](https://img.shields.io/badge/Admin%20%26%20Doctor%20Panel-Live-123F78?style=for-the-badge)](https://mediayucare-admin.vercel.app)
-[![Backend](https://img.shields.io/badge/Backend-Render-6B7280?style=for-the-badge)](https://mediayucare-health-ally.onrender.com)
+A production-style **full-stack healthcare appointment platform** that connects patients, doctors, and administrators through secure authentication, doctor discovery, appointment booking, payments, and role-based dashboards.
 
-## 🌐 Live Demo
+<p>
+  <a href="https://mediayucare-health-ally.vercel.app"><img src="https://img.shields.io/badge/🌐%20Patient%20Website-LIVE-087F8C?style=for-the-badge"></a>
+  <a href="https://mediayucare-admin.vercel.app"><img src="https://img.shields.io/badge/🛡️%20Admin%20%26%20Doctor%20Panel-LIVE-123F78?style=for-the-badge"></a>
+  <a href="https://mediayucare-health-ally.onrender.com"><img src="https://img.shields.io/badge/⚙️%20Backend%20API-RENDER-475569?style=for-the-badge"></a>
+</p>
 
--   **Patient Website:** https://mediayucare-health-ally.vercel.app
--   **Admin & Doctor Panel:** https://mediayucare-admin.vercel.app
--   **Backend API:** https://mediayucare-health-ally.onrender.com
+<p>
+  <img src="https://img.shields.io/badge/React-Frontend-61DAFB?style=flat-square&logo=react&logoColor=black">
+  <img src="https://img.shields.io/badge/Node.js-Backend-339933?style=flat-square&logo=node.js&logoColor=white">
+  <img src="https://img.shields.io/badge/Express.js-API-000000?style=flat-square&logo=express&logoColor=white">
+  <img src="https://img.shields.io/badge/MongoDB-Database-47A248?style=flat-square&logo=mongodb&logoColor=white">
+  <img src="https://img.shields.io/badge/JWT-Auth-000000?style=flat-square">
+  <img src="https://img.shields.io/badge/Razorpay-Payments-0C2451?style=flat-square">
+</p>
 
-## 📖 Overview
+</div>
 
-MediAyuCare is a full-stack healthcare appointment platform built to
-simplify the process of discovering doctors, booking appointments,
-managing schedules, and handling payments.
+---
 
-The idea came from my own experience while trying to book a healthcare
-appointment online at **AIIMS Patna**, where I realized the value of a
-convenient and organized digital appointment system. This motivated me
-to build MediAyuCare as a practical full-stack project focused on
-solving a real-world problem.
+## 🎨 Project Overview
 
-The platform provides dedicated experiences for **Patients, Doctors, and
-Administrators**, with authentication, role-based access, appointment
-management, online/cash payments, doctor availability, and
-administrative controls.
+<p align="center">
+  <img src="assets/mediayucare-3d-overview.png" alt="MediAyuCare 3D Project Overview" width="100%">
+</p>
 
-## ✨ Key Features
+> **MediAyuCare** was created around a simple real-world problem: making healthcare appointment booking more organized and convenient for patients while giving doctors and administrators the tools needed to manage appointments efficiently.
 
-### 👤 Patient
+The idea was inspired by my experience while trying to book a healthcare appointment online at **AIIMS Patna**. That experience highlighted how useful a well-organized digital appointment system could be and motivated me to build MediAyuCare as a practical, resume-oriented full-stack project.
 
--   Secure authentication and personalized dashboard.
--   Search and filter doctors by speciality.
--   View doctor profiles, fees, experience, and availability.
--   Book, view, and cancel appointments.
--   Online payment with Razorpay and cash payment option.
--   Manage and update personal profile.
--   Access top doctors, About, and Contact sections.
+### What the platform solves
 
-### 👨‍⚕️ Doctor
+| User | Problem Solved | Platform Support |
+|---|---|---|
+| 👤 **Patient** | Finding doctors and managing appointments | Doctor discovery, profiles, slots, booking, payments and appointment history |
+| 👨‍⚕️ **Doctor** | Managing appointments and availability | Dashboard, appointments, profile, fee, availability, earnings and patients |
+| 🛡️ **Admin** | Managing the overall platform | Doctors, appointments, availability, statistics and payment workflow |
 
--   Secure authentication and dedicated dashboard.
--   View and manage patient appointments.
--   Complete or cancel appointments.
--   Manage professional profile, consultation fee, and availability.
--   Track total appointments, patients, and earnings.
+---
 
-### 🛡️ Admin
+## 🌐 Live Application
 
--   Secure admin authentication and dashboard.
--   Monitor total doctors, patients, and appointments.
--   Add and manage doctors.
--   Control doctor availability.
--   View and manage all appointments.
--   Monitor platform-level statistics and payment workflows.
+| Application | Link |
+|---|---|
+| 🌐 **Patient Website** | [Open MediAyuCare](https://mediayucare-health-ally.vercel.app) |
+| 🛡️ **Admin & Doctor Panel** | [Open Dashboard Panel](https://mediayucare-admin.vercel.app) |
+| ⚙️ **Backend API** | [Open Backend](https://mediayucare-health-ally.onrender.com) |
 
-### 🔐 Security
+### 🚀 Deployment Architecture
 
--   Protected backend APIs and authenticated requests.
--   JWT-based authentication and role-based authorization.
--   Server-side validation.
--   Sensitive configuration managed through environment variables.
--   Razorpay payment verification performed on the backend.
+```mermaid
+flowchart LR
+    A[GitHub Repository] --> B[frontend/]
+    A --> C[admin/]
+    A --> D[backend/]
 
-## 👥 User Roles
+    B --> E[Vercel]
+    C --> F[Vercel]
+    D --> G[Render]
 
-MediAyuCare implements role-based access control with three user roles:
+    G --> H[(MongoDB Atlas)]
+    G --> I[Cloudinary]
+    G --> J[Razorpay]
 
-  -----------------------------------------------------------------------
-  Role                                Main Responsibilities
-  ----------------------------------- -----------------------------------
-  **Patient**                         Discover doctors, book
-                                      appointments, make payments, manage
-                                      profile, and track appointments.
+    E --> G
+    F --> G
+```
 
-  **Doctor**                          Manage appointments, profile,
-                                      availability, patients, and
-                                      earnings.
+**Automatic deployment:** changes pushed to the `main` branch can trigger new deployments on the connected Vercel and Render services.
 
-  **Admin**                           Manage doctors, appointments,
-                                      availability, and platform
-                                      statistics.
-  -----------------------------------------------------------------------
+---
 
-### 🔒 Role-Based Access
+## ✨ Core Features
 
--   JWT tokens authenticate protected requests.
--   Dashboard routes are protected according to the authenticated user's
-    role.
--   Patients, doctors, and administrators cannot access dashboards or
-    protected resources belonging to another role.
+### 👤 Patient Experience
 
-## 🛠️ Tech Stack
+- 🔐 Secure registration and login.
+- 🔎 Search and filter doctors by speciality.
+- 👨‍⚕️ View doctor profiles, experience, fees and availability.
+- 📅 Select available dates and time slots.
+- 📝 Book appointments.
+- 💳 Pay online through Razorpay.
+- 💵 Choose the available cash payment option.
+- ❌ Cancel appointments when applicable.
+- 👤 Update personal profile.
+- 📋 View appointment history.
+- 🏠 Access Top Doctors, About and Contact sections.
 
-### Frontend
+### 👨‍⚕️ Doctor Experience
 
--   React.js
--   Tailwind CSS
--   React Router
--   React Redux
--   Axios
--   React Toastify
--   Vite
+- 🔐 Secure doctor authentication.
+- 📊 Dedicated doctor dashboard.
+- 📅 View latest and upcoming appointments.
+- ✅ Complete appointments.
+- ❌ Cancel appointments.
+- 👤 Update professional profile.
+- 💰 Manage consultation fee.
+- 🕐 Control availability.
+- 📈 Track earnings.
+- 👥 Track appointments and unique patients.
 
-### Backend
+### 🛡️ Admin Experience
 
--   Node.js
--   Express.js
--   JWT
--   Multer
+- 🔐 Secure administrator authentication.
+- 📊 Platform dashboard.
+- 👨‍⚕️ Add doctors.
+- 📋 View and manage doctor list.
+- 📅 View and manage appointments.
+- 🟢 Control doctor availability.
+- 👥 Monitor total patients.
+- 💳 Monitor appointment/payment workflow.
+- 📈 View platform-level statistics.
 
-### Database & Storage
+---
 
--   MongoDB
--   Mongoose
--   Cloudinary
+## 🔐 Security & Access Control
 
-### Payments & Deployment
+Security is implemented as a core part of the application rather than only a UI feature.
 
--   Razorpay
--   Vercel
--   Render
--   MongoDB Atlas
+### Authentication
 
-## 🔄 Application Workflow
+```text
+User Login
+    ↓
+Credentials Verified
+    ↓
+JWT Token Generated
+    ↓
+Token Sent With Protected Requests
+    ↓
+Backend Authentication Middleware
+    ↓
+Authorized Resource
+```
 
-1.  **Authentication** --- Users log in according to their role:
-    Patient, Doctor, or Admin.
-2.  **Doctor Discovery** --- Patients browse doctors, filter by
-    speciality, and review profiles, fees, and availability.
-3.  **Appointment Booking** --- Patients select an available doctor,
-    date, and time slot.
-4.  **Payment** --- Patients choose Razorpay online payment or the
-    available cash payment option.
-5.  **Appointment Management** --- Patients view and cancel appointments
-    when required.
-6.  **Doctor Management** --- Doctors manage appointments, availability,
-    and appointment status.
-7.  **Administration** --- Administrators manage doctors, appointments,
-    availability, and platform statistics.
+### Role-Based Authorization
 
-## 📅 Appointment Booking Flow
+```mermaid
+flowchart TD
+    A[Authenticated Request] --> B{User Role}
+    B -->|Patient| C[Patient Protected APIs]
+    B -->|Doctor| D[Doctor Protected APIs]
+    B -->|Admin| E[Admin Protected APIs]
 
-``` text
+    C -. blocked .-> D
+    C -. blocked .-> E
+    D -. blocked .-> C
+    D -. blocked .-> E
+    E -. blocked .-> C
+    E -. blocked .-> D
+```
+
+Implemented security mechanisms include:
+
+- JWT-based authentication.
+- Protected backend APIs.
+- Role-based authorization.
+- Server-side validation.
+- Environment variables for sensitive configuration.
+- Backend verification of Razorpay payments.
+
+---
+
+## 🔄 How MediAyuCare Works
+
+```text
+┌──────────────┐
+│ Authentication│
+└──────┬───────┘
+       ↓
+┌──────────────┐
+│ Find Doctor  │
+└──────┬───────┘
+       ↓
+┌──────────────┐
+│ Doctor Profile│
+└──────┬───────┘
+       ↓
+┌──────────────┐
+│ Select Slot  │
+└──────┬───────┘
+       ↓
+┌──────────────┐
+│Book Appointment│
+└──────┬───────┘
+       ↓
+ ┌───────────────┐
+ │ Payment Choice│
+ └───────┬───────┘
+       ↙   ↘
+  Razorpay  Cash
+       ↘   ↙
+       ↓
+┌──────────────┐
+│ Appointment  │
+│   Confirmed  │
+└──────┬───────┘
+       ↓
+┌────────────────┐
+│ Doctor Manages │
+└──────┬─────────┘
+       ↓
+ Complete / Cancel
+       ↓
+┌────────────────┐
+│ Patient Tracks │
+│     Status     │
+└────────────────┘
+```
+
+### 📌 Appointment Lifecycle
+
+| Status | Meaning |
+|---|---|
+| 🟢 **Booked** | Appointment has been successfully scheduled |
+| 💳 **Paid** | Online payment has been successfully verified |
+| ✅ **Completed** | Doctor has completed the appointment |
+| 🔴 **Cancelled** | Appointment has been cancelled where applicable |
+
+---
+
+## 💳 Payment Architecture
+
+MediAyuCare supports **Razorpay online payment** as well as the available **cash payment** workflow.
+
+### Razorpay
+
+```text
 Patient
-   ↓
-Find Doctor
-   ↓
-View Doctor Profile
-   ↓
-Select Date & Time
    ↓
 Create Appointment
    ↓
-Choose Payment Method
-   ├── Razorpay → Online Payment
-   └── Cash → Cash Payment
+Start Razorpay Payment
    ↓
-Appointment Confirmed
+Payment Completed
    ↓
-Doctor Manages Appointment
-   ├── Complete → Completed
-   └── Cancel → Cancelled
+Payment Details → Backend
    ↓
-Patient Tracks Appointment Status
+Razorpay Verification
+   ↓
+Verified Payment
+   ↓
+Appointment Payment Status Updated
 ```
 
-### Appointment Status
+The important security point is that the application does **not rely only on the client-side payment result**. The payment is verified through the backend before the appointment is updated as paid.
 
--   **Booked** --- Appointment has been successfully scheduled.
--   **Paid** --- Online payment has been successfully completed.
--   **Completed** --- Doctor has completed the appointment.
--   **Cancelled** --- Appointment has been cancelled where applicable.
+### Cash
 
-## 💳 Payment Flow
+```text
+Patient
+   ↓
+Create Appointment
+   ↓
+Choose Cash
+   ↓
+Appointment Created
+   ↓
+Available for Patient / Doctor / Admin Management
+```
 
-MediAyuCare supports both online and cash-based appointment payments.
+---
 
-### Razorpay Online Payment
+## 🧩 System Architecture
 
-1.  Patient selects an appointment and chooses Razorpay.
-2.  The application initiates the payment process.
-3.  Payment details are sent to the backend after the transaction.
-4.  The backend verifies the Razorpay payment.
-5.  The appointment is updated with the verified payment status.
+```mermaid
+flowchart TB
+    subgraph Client["Client Applications"]
+        P[Patient React App]
+        AD[Admin & Doctor React App]
+    end
 
-### Cash Payment
+    subgraph Server["Backend"]
+        API[Express REST API]
+        AUTH[JWT Middleware]
+        CTRL[Controllers]
+        MODELS[Mongoose Models]
+    end
 
-1.  Patient selects the cash payment option.
-2.  The appointment is created without an online transaction.
-3.  The appointment remains available for management by the patient,
-    doctor, and administrator.
+    subgraph Services["External Services"]
+        DB[(MongoDB Atlas)]
+        CL[Cloudinary]
+        RP[Razorpay]
+    end
+
+    P --> API
+    AD --> API
+    API --> AUTH
+    AUTH --> CTRL
+    CTRL --> MODELS
+    MODELS --> DB
+    CTRL --> CL
+    CTRL --> RP
+```
+
+### Architecture Responsibilities
+
+- **React** → user interfaces and client-side interaction.
+- **Express.js** → REST API layer.
+- **JWT middleware** → authentication and role authorization.
+- **Controllers** → application/business operations.
+- **Mongoose** → database models and MongoDB communication.
+- **MongoDB Atlas** → persistent application data.
+- **Cloudinary** → image storage.
+- **Razorpay** → online appointment payments.
+- **Vercel / Render** → application deployment.
+
+---
+
+## 🛠️ Technology Stack
+
+### Frontend
+
+| Technology | Purpose |
+|---|---|
+| React.js | UI development |
+| React Router | Client-side routing |
+| Tailwind CSS | Responsive styling |
+| React Redux | State management |
+| Axios | API communication |
+| React Toastify | User notifications |
+| Vite | Frontend build tooling |
+
+### Backend
+
+| Technology | Purpose |
+|---|---|
+| Node.js | Server runtime |
+| Express.js | REST API framework |
+| JWT | Authentication |
+| Multer | File upload handling |
+
+### Data & Services
+
+| Technology | Purpose |
+|---|---|
+| MongoDB | Database |
+| Mongoose | ODM |
+| Cloudinary | Image storage |
+| Razorpay | Payment processing |
+| Vercel | Frontend/Admin deployment |
+| Render | Backend deployment |
+
+---
 
 ## 🔌 API Overview
 
-The backend follows a role-based REST API architecture.
+The backend is organized into separate role-based API modules.
 
-  -----------------------------------------------------------------------
-  Module                              Responsibilities
-  ----------------------------------- -----------------------------------
-  **User APIs**                       Registration, authentication,
-                                      profile management, appointments,
-                                      cancellation, and Razorpay payments
+| API Module | Main Responsibilities |
+|---|---|
+| `/api/user` | Registration, login, profile, appointments, cancellation and Razorpay payment |
+| `/api/doctor` | Doctor listing, login, dashboard, appointments, profile and availability |
+| `/api/admin` | Admin login, doctor management, appointments, availability and dashboard |
 
-  **Doctor APIs**                     Authentication, doctor listing,
-                                      dashboard, appointments, profile
-                                      management, and availability
+### Main User Operations
 
-  **Admin APIs**                      Authentication, doctor management,
-                                      appointment management,
-                                      availability control, and dashboard
-                                      statistics
-  -----------------------------------------------------------------------
-
-All protected API operations require appropriate authentication and role
-authorization.
-
-### Main Route Groups
-
-``` text
-/api/user
-/api/doctor
-/api/admin
+```text
+POST  /register
+POST  /login
+GET   /get-profile
+POST  /update-profile
+POST  /book-appointment
+GET   /appointments
+POST  /cancel-appointment
+POST  /payment-razorpay
+POST  /verifyRazorpay
 ```
 
-## 📂 Project Structure
+### Main Doctor Operations
 
-``` text
+```text
+GET   /list
+POST  /login
+GET   /appointments
+POST  /cancel-appointment
+POST  /complete-appointment
+GET   /dashboard
+GET   /profile
+POST  /update-profile
+POST  /change-availability
+```
+
+### Main Admin Operations
+
+```text
+POST  /add-doctor
+POST  /login
+POST  /all-doctors
+POST  /change-availability
+GET   /appointments
+POST  /cancel-appointment
+GET   /dashboard
+```
+
+> All protected operations require the appropriate authentication and role authorization.
+
+---
+
+## 📁 Project Structure
+
+```text
 MediAyuCare/
-├── frontend/
+│
+├── frontend/                         # Patient-facing React application
 │   ├── src/
 │   │   ├── assets/
 │   │   ├── components/
@@ -245,7 +419,7 @@ MediAyuCare/
 │   │   └── main.jsx
 │   └── ...
 │
-├── admin/
+├── admin/                            # Admin & Doctor React application
 │   ├── src/
 │   │   ├── assets/
 │   │   ├── components/
@@ -258,10 +432,19 @@ MediAyuCare/
 │   │   └── main.jsx
 │   └── ...
 │
-├── backend/
+├── backend/                          # Express backend
 │   ├── config/
+│   │   ├── cloudinary.js
+│   │   └── mongodb.js
 │   ├── controllers/
+│   │   ├── adminController.js
+│   │   ├── doctorController.js
+│   │   └── userController.js
 │   ├── middlewares/
+│   │   ├── authAdmin.js
+│   │   ├── authDoctor.js
+│   │   ├── authUser.js
+│   │   └── multer.js
 │   ├── models/
 │   ├── routes/
 │   ├── constants.js
@@ -270,13 +453,15 @@ MediAyuCare/
 └── README.md
 ```
 
-## ⚙️ Environment Variables
+---
 
-Create the required `.env` files in `backend`, `frontend`, and `admin`.
+## ⚙️ Environment Configuration
 
-### Backend
+Create `.env` files inside the **backend**, **frontend**, and **admin** directories.
 
-``` env
+### Backend `.env`
+
+```env
 PORT=your_port
 MONGODB_URI=your_mongodb_connection_string
 
@@ -295,217 +480,263 @@ RAZORPAY_KEY_SECRET=your_razorpay_key_secret
 CURRENCY=your_currency
 ```
 
-### Frontend
+### Frontend `.env`
 
-``` env
+```env
 VITE_BACKEND_URL=your_backend_url
 VITE_RAZORPAY_KEY_ID=your_razorpay_key_id
 ```
 
-### Admin
+### Admin `.env`
 
-``` env
+```env
 VITE_BACKEND_URL=your_backend_url
 ```
 
-> **Security:** Never commit `.env` files or expose API keys, database
-> credentials, passwords, or JWT secrets publicly.
+> ⚠️ **Never commit `.env` files.** Keep database credentials, passwords, JWT secrets, Cloudinary credentials and Razorpay secrets private.
 
-## 💻 Installation & Setup
+---
 
-### 1. Clone Repository
+## 💻 Local Development
 
-``` bash
+### 1. Clone the repository
+
+```bash
 git clone <your-repository-url>
 cd <your-repository-folder>
 ```
 
-### 2. Install Dependencies
+### 2. Install dependencies
 
-``` bash
-# Backend
+Open three terminals:
+
+```bash
+# Terminal 1 — Backend
 cd backend
 npm install
-
-# Frontend
-cd ../frontend
-npm install
-
-# Admin
-cd ../admin
-npm install
-```
-
-### 3. Configure Environment Variables
-
-Create the required `.env` files using the templates above.
-
-### 4. Run Backend
-
-``` bash
-cd backend
 npm run dev
 ```
 
-### 5. Run Frontend
-
-``` bash
+```bash
+# Terminal 2 — Frontend
 cd frontend
+npm install
 npm run dev
 ```
 
-### 6. Run Admin Panel
-
-``` bash
+```bash
+# Terminal 3 — Admin / Doctor Panel
 cd admin
+npm install
 npm run dev
 ```
 
-Run the three applications simultaneously in separate terminals during
-local development.
+### 3. Configure environment variables
 
-## 🚀 Deployment
+Add the required values to the `.env` files described above.
 
-The project uses a monorepo deployment setup:
+---
 
-``` text
-GitHub Repository
-       │
-       ├── frontend/ ──→ Vercel
-       │
-       ├── admin/ ─────→ Vercel
-       │
-       └── backend/ ───→ Render
+## 🚀 Production Deployment
+
+MediAyuCare is deployed as a **monorepo**:
+
+```text
+                    GitHub
+                      │
+          ┌───────────┼───────────┐
+          ↓           ↓           ↓
+      frontend/    admin/     backend/
+          │           │           │
+          ↓           ↓           ↓
+       Vercel      Vercel      Render
+          │           │           │
+          └───────────┬───────────┘
+                      ↓
+                 Live Platform
 ```
 
-The deployed services are connected to the GitHub repository for
-automatic deployment when changes are pushed to the main branch.
+### Continuous Deployment
 
-``` text
-VS Code
-   ↓
+```text
+Code Change
+    ↓
 git add .
-   ↓
+    ↓
 git commit
-   ↓
+    ↓
 git push origin main
-   ↓
+    ↓
 GitHub
-   ↓
-Vercel / Render
-   ↓
-Live Application Updated
+    ↓
+Vercel / Render Build
+    ↓
+Production Deployment
 ```
 
-## 📸 Screenshots
+---
 
-### 🏠 1. Patient Home
+# 📸 Product Showcase
 
-![Patient Home](screenshots/patient-home.png)
+> The following six images are kept **separate** so each major application experience can be viewed independently.
 
-The landing page provides patients with a clear entry point to discover
-doctors and book healthcare appointments.
+### 01 — 🏠 Patient Home
 
-### 🔎 2. Doctor Discovery
+<p align="center">
+  <img src="assets/screenshots/patient-home.png" alt="Patient Home" width="92%">
+</p>
 
-![Doctor Discovery](screenshots/doctor-discovery.png)
+The patient landing page introduces the platform and provides direct access to doctor discovery and appointment booking.
 
-Patients can browse doctors and filter them according to medical
-speciality.
+---
 
-### 👨‍⚕️ 3. Doctor Profile & Booking
+### 02 — 🔎 Doctor Discovery
 
-![Doctor Profile & Booking](screenshots/doctor-profile-booking.png)
+<p align="center">
+  <img src="assets/screenshots/doctor-discovery.png" alt="Doctor Discovery" width="92%">
+</p>
 
-Patients can view doctor information, consultation fees, available
-dates, and booking slots.
+Patients can browse available doctors and narrow the list by medical speciality before selecting a doctor.
 
-### 📋 4. My Appointments
+---
 
-![My Appointments](screenshots/my-appointments.png)
+### 03 — 👨‍⚕️ Doctor Profile & Booking
 
-Patients can view appointment details, payment options, status, and
-cancellation actions.
+<p align="center">
+  <img src="assets/screenshots/doctor-profile-booking.png" alt="Doctor Profile and Booking" width="92%">
+</p>
 
-### 📊 5. Doctor Dashboard
+The doctor profile presents professional information, consultation fee, available dates and booking slots.
 
-![Doctor Dashboard](screenshots/doctor-dashboard.png)
+---
 
-Doctors can monitor earnings, appointments, unique patients, latest
-bookings, and appointment status.
+### 04 — 📋 My Appointments
 
-### 🛡️ 6. Admin Dashboard
+<p align="center">
+  <img src="assets/screenshots/my-appointments.png" alt="My Appointments" width="92%">
+</p>
 
-![Admin Dashboard](screenshots/admin-dashboard.png)
+Patients can review appointment details, available payment actions, appointment timing and cancellation options.
 
-Administrators can monitor doctors, appointments, patients, and recent
-platform activity.
+---
 
-## 📱 Responsive Design
+### 05 — 📊 Doctor Dashboard
 
-MediAyuCare is designed to provide a responsive and user-friendly
-experience across desktop, tablet, and mobile screen sizes.
+<p align="center">
+  <img src="assets/screenshots/doctor-dashboard.png" alt="Doctor Dashboard" width="92%">
+</p>
 
-## 🧪 Testing
+The doctor dashboard summarizes earnings, total appointments, unique patients, recent bookings and appointment status.
 
-The major application workflows were manually tested after deployment,
-including:
+---
 
--   Patient registration and login.
--   Doctor discovery and filtering.
--   Appointment booking and cancellation.
--   Online and cash payment workflows.
--   Doctor dashboard and appointment management.
--   Admin dashboard and management features.
--   Role-based access and protected routes.
+### 06 — 🛡️ Admin Dashboard
 
-## ⚙️ Technical Highlights
+<p align="center">
+  <img src="assets/screenshots/admin-dashboard.png" alt="Admin Dashboard" width="92%">
+</p>
 
--   JWT authentication with role-based authorization.
--   Protected backend APIs.
--   Server-side validation.
--   Backend verification of Razorpay payments.
--   MongoDB and Mongoose for persistent data management.
--   Cloudinary for image storage.
--   RESTful APIs built with Express.js.
--   Environment variables for sensitive configuration.
--   Separate patient, doctor, and admin experiences.
+The admin dashboard provides a platform-level overview of doctors, appointments, patients and recent booking activity.
 
-## 🚀 Future Enhancements
+---
 
--   💬 Doctor--Patient Chat
--   📹 Video Consultation
--   📄 Digital Prescriptions
--   🗂️ Medical Records
--   ⭐ Doctor Reviews & Ratings
+## 🧪 Testing & Verification
+
+After deployment, the major application workflows were manually verified:
+
+- ✅ Patient registration and login.
+- ✅ Doctor discovery and speciality filtering.
+- ✅ Doctor profile and slot selection.
+- ✅ Appointment booking.
+- ✅ Razorpay payment flow.
+- ✅ Cash payment workflow.
+- ✅ Appointment cancellation.
+- ✅ Doctor appointment management.
+- ✅ Doctor profile and availability management.
+- ✅ Admin doctor management.
+- ✅ Admin appointment management.
+- ✅ Role-based protected routes.
+- ✅ Production frontend → backend communication.
+
+---
+
+## 🧠 Technical Highlights
+
+| Area | Implementation |
+|---|---|
+| 🔐 Authentication | JWT-based authentication |
+| 🛡️ Authorization | Patient / Doctor / Admin role separation |
+| 🌐 API | REST architecture with Express.js |
+| 🗄️ Database | MongoDB + Mongoose |
+| ☁️ Image Storage | Cloudinary |
+| 💳 Payments | Razorpay with backend verification |
+| 🎨 UI | React + Tailwind CSS |
+| 📱 UX | Responsive interface |
+| 🚀 Deployment | Vercel + Render |
+| 🔄 CI/CD | GitHub-connected automatic deployments |
+
+---
+
+## 🗺️ Future Roadmap
+
+The current platform can be extended with:
+
+- 💬 **Doctor–Patient Chat** — direct communication.
+- 📹 **Video Consultation** — remote appointments.
+- 📄 **Digital Prescriptions** — electronic prescription generation.
+- 🗂️ **Medical Records** — centralized patient records.
+- ⭐ **Reviews & Ratings** — patient feedback for doctors.
+
+---
 
 ## 🤝 Contributing
 
-Contributions, suggestions, and improvements are welcome.
+Contributions and suggestions are welcome.
 
-1.  Fork the repository.
-2.  Create a new branch.
-3.  Make your changes.
-4.  Commit and push your changes.
-5.  Open a Pull Request.
+```text
+Fork
+  ↓
+Create Branch
+  ↓
+Make Changes
+  ↓
+Commit
+  ↓
+Push
+  ↓
+Pull Request
+```
+
+Please keep changes focused and maintain the existing project structure.
+
+---
 
 ## 📄 License
 
 This project is licensed under the **MIT License**.
 
+---
+
 ## 👨‍💻 Author
 
-**Ayush Ranjan**
+<div align="center">
 
--   GitHub: https://github.com/ayushbhardwaj96
--   LinkedIn: https://linkedin.com/in/ayush-ranjan-a2ab3a368
+### **Ayush Ranjan**
 
-------------------------------------------------------------------------
+Full-Stack Developer • MERN Stack
 
-```{=html}
-<p align="center">
-```
-Built with ❤️ by Ayush Ranjan
-```{=html}
-</p>
-```
+[![GitHub](https://img.shields.io/badge/GitHub-ayushbhardwaj96-181717?style=for-the-badge&logo=github)](https://github.com/ayushbhardwaj96)
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-Ayush%20Ranjan-0A66C2?style=for-the-badge&logo=linkedin)](https://linkedin.com/in/ayush-ranjan-a2ab3a368)
+
+</div>
+
+---
+
+<div align="center">
+
+### 🏥 MediAyuCare
+**Your Health Ally**
+
+Built with ❤️, React, Node.js, Express.js and MongoDB.
+
+</div>
